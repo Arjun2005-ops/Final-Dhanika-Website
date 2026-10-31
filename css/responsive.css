@@ -1,0 +1,439 @@
+/* ==========================================================================
+   FIONA FLORIST BY DHANIKA — RESPONSIVE STYLES
+   Breakpoints:
+   - Desktop & Large Laptop: 1200px+
+   - Laptop / Small Desktop: 992px - 1199px
+   - Tablet: 768px - 991px
+   - Mobile: 320px - 767px
+   ========================================================================== */
+
+/* ============================================
+   TABLET & SMALLER (< 992px)
+   ============================================ */
+@media (max-width: 992px) {
+  .nav-links {
+    display: none;
+  }
+
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
+
+  .hero-badge {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-description {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-cta {
+    justify-content: center;
+  }
+
+  .hero-perks {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+
+  .card-top-right {
+    right: 0;
+  }
+
+  .card-bottom-left {
+    left: 0;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
+
+  .about-badge {
+    bottom: -15px;
+    right: 15px;
+  }
+
+  .values-list {
+    text-align: left;
+  }
+
+  .custom-banner-card {
+    grid-template-columns: 1fr;
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .custom-banner-content p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .custom-banner-actions {
+    justify-content: center;
+  }
+
+  .custom-banner-steps {
+    text-align: left;
+  }
+
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-order-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
+
+  /* Search box adapts */
+  .search-and-sort {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    min-width: unset;
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/* ============================================
+   MOBILE SCREENS (< 768px)
+   ============================================ */
+@media (max-width: 768px) {
+  /* === Base === */
+  .container {
+    padding: 0 1rem;
+  }
+
+  /* === Announcement Bar === */
+  .top-announcement {
+    font-size: 0.72rem;
+    padding: 0.35rem 0.75rem;
+    gap: 0.35rem;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    /* Show only first item on mobile — hide separators and others via overflow */
+  }
+
+  .top-announcement span:nth-child(3),
+  .top-announcement span:nth-child(4),
+  .top-announcement span:nth-child(5) {
+    display: none;
+  }
+
+  /* === Navbar === */
+  .logo-img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .brand-name {
+    font-size: 1.1rem;
+  }
+
+  /* === Hero === */
+  .hero {
+    padding: 2.5rem 0 3.5rem;
+  }
+
+  .heading-primary {
+    font-size: 2rem;
+  }
+
+  /* Hide hero image on small phones to save space and avoid broken layout */
+  .hero-image-container {
+    display: none;
+  }
+
+  /* === Features === */
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .feature-box {
+    padding: 1rem;
+  }
+
+  /* === Shop Controls === */
+  .shop-controls {
+    padding: 1rem;
+  }
+
+  .search-and-sort {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .search-box {
+    min-width: unset;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  /* Sort select full-width on mobile */
+  .search-and-sort > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .search-and-sort select {
+    flex: 1;
+  }
+
+  /* === Category Tabs — horizontal scroll === */
+  .category-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    width: 100%;
+    padding-bottom: 0.5rem;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .category-tabs::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  .filter-btn {
+    flex-shrink: 0;
+    font-size: 0.82rem;
+    padding: 0.45rem 1rem;
+  }
+
+  /* === Products Grid === */
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .card-content {
+    padding: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.05rem;
+  }
+
+  .product-price {
+    font-size: 1.15rem;
+  }
+
+  /* Ensure Add-to-Bag button meets 48px touch target */
+  .btn-add-cart {
+    min-height: 48px;
+    font-size: 0.88rem;
+  }
+
+  /* === Pricing Row — stack on very narrow cards === */
+  .price-quantity-row {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* === Values List === */
+  .values-list {
+    grid-template-columns: 1fr;
+  }
+
+  /* === Cart Item Row === */
+  .cart-item-row {
+    grid-template-columns: 70px 1fr 30px;
+    grid-template-areas:
+      "thumb info remove"
+      "thumb qty price";
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .cart-item-thumb {
+    grid-area: thumb;
+    width: 70px;
+    height: 70px;
+  }
+
+  .cart-item-info {
+    grid-area: info;
+  }
+
+  .btn-remove-item {
+    grid-area: remove;
+    justify-self: end;
+  }
+
+  .cart-item-row .qty-control {
+    grid-area: qty;
+  }
+
+  .cart-item-subtotal {
+    grid-area: price;
+    text-align: right;
+  }
+
+  /* === Forms === */
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* === Footer === */
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* === Floating Cards — hide on phones === */
+  .floating-card {
+    display: none;
+  }
+
+  /* === About Image === */
+  .about-image-wrapper {
+    max-width: 100%;
+  }
+
+  .about-image {
+    aspect-ratio: 4/3;
+    width: 100%;
+  }
+
+  .about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* === Testimonials === */
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* === Step Cards === */
+  .step-card {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  /* === Checkout & Cart Cards padding === */
+  .cart-table-card,
+  .cart-summary-card {
+    padding: 1.25rem;
+  }
+}
+
+/* ============================================
+   VERY SMALL MOBILE (< 480px)
+   ============================================ */
+@media (max-width: 480px) {
+  /* Hero CTA stacks vertically */
+  .hero-cta {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero-cta .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Brand name tight on tiny phones */
+  .brand-name {
+    font-size: 1rem;
+  }
+
+  .brand-by {
+    font-size: 0.62rem;
+  }
+
+  /* Products 1-column on tiny phones */
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Variant selector always 3 equal columns */
+  .variant-options {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Filter button font smaller */
+  .filter-btn {
+    font-size: 0.78rem;
+    padding: 0.4rem 0.85rem;
+  }
+
+  /* Cart buttons full width */
+  .custom-banner-actions .btn,
+  .hero-cta .btn {
+    width: 100%;
+  }
+
+  /* Section padding tighter */
+  .shop-section {
+    padding: 3rem 0;
+  }
+
+  /* Pricing guide card stack */
+  .pricing-guide-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  /* WhatsApp chat button stays wide */
+  .btn-whatsapp {
+    width: 100%;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION — accessibility
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
