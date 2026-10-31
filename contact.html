@@ -51,6 +51,14 @@
           </svg>
         </button>
 
+        <button type="button" class="icon-btn auth-nav-btn" aria-label="Account Login or Profile" title="Account">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span class="user-status-dot" style="display: none;"></span>
+        </button>
+
         <a href="cart.html" class="icon-btn" aria-label="Shopping Cart">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
@@ -89,6 +97,7 @@
       <li><a href="custom-order.html">Custom Orders</a></li>
       <li><a href="contact.html" class="active">Contact & FAQ</a></li>
       <li><a href="cart.html">Shopping Bag (<span class="cart-count">0</span>)</a></li>
+      <li><a href="#" id="mobile-auth-trigger">👤 <span id="mobile-auth-text">Login / Register</span></a></li>
     </ul>
     <div style="margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--color-border);">
       <button class="btn btn-whatsapp trigger-whatsapp-btn" style="width: 100%;">
@@ -366,6 +375,7 @@
       </div>
 
       <div class="footer-bottom">
+        <!-- admin --><a href="admin.html" aria-hidden="true" tabindex="-1" style="color:transparent;font-size:0.01px;user-select:none;position:absolute;pointer-events:none;opacity:0;" id="admin-secret-link">.</a>
         <p>&copy; 2026 Fiona Florist by Dhanika. All rights reserved. “Flowers That Never Fade.”</p>
         <p>Maharashtra, India.</p>
       </div>
@@ -374,6 +384,8 @@
 
   <!-- Scripts -->
   <script src="js/products.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin-render.js"></script>
   <script src="js/main.js"></script>
   <script>
     // Contact form validation and WhatsApp link

@@ -65,9 +65,33 @@ function updateCartBadges() {
 
 /**
  * Add product with variant to cart
+ * Security Gatekeeper: Only logged in users are permitted to add creations to bag.
  * Item key is combination of id and variant (e.g. "rose-single_single")
  */
 function addToCart(productId, variant = "single", quantity = 1) {
+  // Check if user is logged in
+  let loggedIn = false;
+  if (typeof isUserLoggedIn === "function") {
+    loggedIn = isUserLoggedIn();
+  } else {
+    try {
+      loggedIn = localStorage.getItem("fiona_florist_current_user_v1") !== null;
+    } catch (e) {
+      loggedIn = false;
+    }
+  }
+
+  if (!loggedIn) {
+    showToast("Please login first to add flowers to your bag! 🌸", "error");
+    if (typeof openAuthModal === "function") {
+      openAuthModal("login", {
+        reason: "Please login to your account to add items to your shopping bag.",
+        pendingProduct: { productId, variant, quantity }
+      });
+    }
+    return;
+  }
+
   const product = typeof getProductById === "function" ? getProductById(productId) : null;
   if (!product) {
     showToast("Product details could not be found.", "error");

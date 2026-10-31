@@ -143,12 +143,38 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Intercept Proceed to Checkout if not logged in
+  const proceedBtn = document.querySelector('a[href="checkout.html"]');
+  if (proceedBtn) {
+    proceedBtn.addEventListener("click", (e) => {
+      if (typeof isUserLoggedIn === "function" && !isUserLoggedIn()) {
+        e.preventDefault();
+        showToast("Please login before proceeding to checkout! 🌸", "error");
+        if (typeof openAuthModal === "function") {
+          openAuthModal("login", {
+            reason: "Please login to your account to proceed to checkout."
+          });
+        }
+      }
+    });
+  }
+
   // Quick Order from Cart via WhatsApp
   if (quickWaBtn) {
     quickWaBtn.addEventListener("click", () => {
       const cart = getCart();
       if (cart.length === 0) {
         showToast("Your shopping bag is empty!", "error");
+        return;
+      }
+
+      if (typeof isUserLoggedIn === "function" && !isUserLoggedIn()) {
+        showToast("Please login before ordering flowers! 🌸", "error");
+        if (typeof openAuthModal === "function") {
+          openAuthModal("login", {
+            reason: "Please login to confirm your order via WhatsApp."
+          });
+        }
         return;
       }
 

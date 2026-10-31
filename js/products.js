@@ -5,7 +5,7 @@
  * Authentic Handcrafted Pipe-Cleaner Blooms & Accessories
  */
 
-const PRODUCTS_DATA = [
+const DEFAULT_PRODUCTS_CATALOG = [
   {
     id: "special-bouquet",
     name: "Special Floral Bouquet",
@@ -323,7 +323,90 @@ const PRODUCTS_DATA = [
   }
 ];
 
+// Global dynamic catalog
+let PRODUCTS_DATA = [...DEFAULT_PRODUCTS_CATALOG];
+
+// ==========================================================================
+// CATEGORIES DATA & SYNC
+// ==========================================================================
+const DEFAULT_CATEGORIES = [
+  { id: "bouquets", name: "Bouquets", icon: "💐", isDefault: true },
+  { id: "roses", name: "Roses", icon: "🌹", isDefault: true },
+  { id: "sunflowers", name: "Sunflowers", icon: "🌻", isDefault: true },
+  { id: "flowers", name: "Flowers / Stems", icon: "🌸", isDefault: true },
+  { id: "keychains", name: "Keychains", icon: "✨", isDefault: true },
+  { id: "accessories", name: "Accessories", icon: "🎀", isDefault: true }
+];
+
+function getCategories() {
+  try {
+    const raw = localStorage.getItem("fiona_admin_categories_v1");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        const defaultMap = new Map(DEFAULT_CATEGORIES.map(c => [c.id, c]));
+        parsed.forEach(c => defaultMap.set(c.id, { ...(defaultMap.get(c.id) || {}), ...c }));
+        return Array.from(defaultMap.values());
+      }
+    }
+  } catch (err) {
+    console.error("Error reading categories from localStorage:", err);
+  }
+  return [...DEFAULT_CATEGORIES];
+}
+
+function saveCategories(categoriesList) {
+  try {
+    localStorage.setItem("fiona_admin_categories_v1", JSON.stringify(categoriesList));
+  } catch (err) {
+    console.error("Error saving categories to localStorage:", err);
+  }
+}
+
+function getStoredProducts() {
+  try {
+    const raw = localStorage.getItem("fiona_admin_products_v1");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error("Error reading custom products from localStorage:", err);
+  }
+  return [...DEFAULT_PRODUCTS_CATALOG];
+}
+
+function syncProductsData() {
+  PRODUCTS_DATA = getStoredProducts();
+  return PRODUCTS_DATA;
+}
+
+function saveProductsData(productsList) {
+  PRODUCTS_DATA = productsList;
+  try {
+    localStorage.setItem("fiona_admin_products_v1", JSON.stringify(productsList));
+  } catch (err) {
+    console.error("Error saving products to localStorage:", err);
+  }
+}
+
+function resetProductsToDefault() {
+  saveProductsData([...DEFAULT_PRODUCTS_CATALOG]);
+  return PRODUCTS_DATA;
+}
+
+// Initial sync on load
+syncProductsData();
+
 // Helper to look up a product by ID
 function getProductById(id) {
+  if (!PRODUCTS_DATA || PRODUCTS_DATA.length === 0) syncProductsData();
   return PRODUCTS_DATA.find(p => p.id === id);
+}
+
+function getAllProducts() {
+  if (!PRODUCTS_DATA || PRODUCTS_DATA.length === 0) syncProductsData();
+  return PRODUCTS_DATA;
 }

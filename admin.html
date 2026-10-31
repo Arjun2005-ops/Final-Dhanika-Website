@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Fiona Florist</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/jpeg" href="assets/logo/logo.jpeg">
+  <style>
+    /* ==========================================
+       ADMIN PANEL STYLES
+       ========================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --adm-bg: #0f0a12;
+      --adm-card: #1c1426;
+      --adm-border: #3a2545;
+      --adm-accent: #8F173C;
+      --adm-accent2: #d4af37;
+      --adm-text: #f0e8f0;
+      --adm-muted: #9a85a0;
+      --adm-success: #27ae60;
+      --adm-danger: #e74c3c;
+      --adm-warning: #f39c12;
+      --adm-radius: 12px;
+      --adm-shadow: 0 8px 32px rgba(0,0,0,0.45);
+    }
+
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--adm-bg); color: var(--adm-text); min-height: 100vh; }
+
+    /* ---- LOGIN SCREEN ---- */
+    #admin-login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at 60% 40%, #2a0a1e 0%, #0f0a12 70%);
+      padding: 2rem;
+    }
+
+    .admin-login-box {
+      background: var(--adm-card);
+      border: 1px solid var(--adm-border);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--adm-shadow);
+      text-align: center;
+    }
+
+    .admin-login-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 1.25rem;
+      border: 3px solid var(--adm-accent);
+      box-shadow: 0 0 20px rgba(143,23,60,0.4);
+    }
+
+    .admin-login-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--adm-text);
+      margin-bottom: 0.25rem;
+    }
+
+    .admin-login-subtitle {
+      font-size: 0.82rem;
+      color: var(--adm-muted);
+      margin-bottom: 2rem;
+    }
+
+    .admin-field-group {
+      margin-bottom: 1.1rem;
+      text-align: left;
+    }
+
+    .admin-field-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--adm-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.4rem;
+    }
+
+    .admin-input-wrap {
+      position: relative;
+    }
+
+    .admin-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid var(--adm-border);
+      border-radius: 10px;
+      color: var(--adm-text);
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .admin-input:focus {
+      outline: none;
+      border-color: var(--adm-accent);
+      background: rgba(255,255,255,0.09);
+    }
+
+    .admin-input::placeholder { color: #5a4560; }
+
+    #admin-pwd-toggle {
+      position: absolute;
+      right: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      opacity: 0.7;
+    }
+
+    .admin-login-error {
+      background: rgba(231,76,60,0.15);
+      border: 1px solid var(--adm-danger);
+      color: #ff8080;
+      padding: 0.65rem 1rem;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .admin-login-btn {
+      width: 100%;
+      padding: 0.85rem;
+      background: linear-gradient(135deg, var(--adm-accent), #4B1026);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(143,23,60,0.35);
+    }
+
+    .admin-login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(143,23,60,0.5); }
+    .admin-login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .admin-back-link {
+      display: inline-block;
+      margin-top: 1.25rem;
+      font-size: 0.82rem;
+      color: var(--adm-muted);
+      text-decoration: none;
+    }
+    .admin-back-link:hover { color: var(--adm-text); }
+
+    /* ---- DASHBOARD ---- */
+    #admin-dashboard { display: none; min-height: 100vh; }
+
+    .admin-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      background: var(--adm-card);
+      border-bottom: 1px solid var(--adm-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .admin-topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .admin-topbar-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--adm-accent);
+    }
+
+    .admin-topbar-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--adm-text);
+    }
+
+    .admin-topbar-subtitle {
+      font-size: 0.7rem;
+      color: var(--adm-accent);
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .admin-logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: rgba(231,76,60,0.12);
+      border: 1px solid rgba(231,76,60,0.3);
+      color: #ff8080;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .admin-logout-btn:hover { background: rgba(231,76,60,0.25); }
+
+    .admin-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: calc(100vh - 65px);
+    }
+
+    .admin-sidebar {
+      background: var(--adm-card);
+      border-right: 1px solid var(--adm-border);
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .admin-sidebar-label {
+      font-size: 0.68rem;
+      color: var(--adm-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      padding: 0.5rem 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .admin-tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--adm-muted);
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .admin-tab-btn:hover { background: rgba(255,255,255,0.05); color: var(--adm-text); }
+    .admin-tab-btn.active { background: rgba(143,23,60,0.18); color: var(--adm-accent); border-left: 3px solid var(--adm-accent); }
+
+    .admin-tab-btn .tab-icon { font-size: 1.1rem; }
+
+    .admin-main {
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    .admin-tab-panel { display: none; }
+    .admin-tab-panel.active { display: block; animation: fadeIn 0.2s ease; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .admin-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .admin-panel-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--adm-text);
+    }
+
+    .admin-panel-desc {
+      font-size: 0.82rem;
+      color: var(--adm-muted);
+      margin-top: 0.2rem;
+    }
+
+    .admin-action-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-admin-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.25rem;
+      background: linear-gradient(135deg, var(--adm-accent), #6e1130);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.88rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-admin-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(143,23,60,0.4); }
+
+    .btn-admin-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.25rem;
+      background: rgba(255,255,255,0.06);
+      color: var(--adm-muted);
+      font-weight: 600;
+      font-size: 0.88rem;
+      border: 1px solid var(--adm-border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-admin-secondary:hover { background: rgba(255,255,255,0.1); color: var(--adm-text); }
+
+    .btn-admin-danger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.25rem;
+      background: rgba(231,76,60,0.12);
+      color: #ff8080;
+      font-weight: 600;
+      font-size: 0.88rem;
+      border: 1px solid rgba(231,76,60,0.25);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-admin-danger:hover { background: rgba(231,76,60,0.22); }
+
+    /* ---- PRODUCT GRID ---- */
+    #admin-products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .admin-product-card {
+      background: var(--adm-card);
+      border: 1px solid var(--adm-border);
+      border-radius: var(--adm-radius);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .admin-product-card:hover { transform: translateY(-3px); box-shadow: var(--adm-shadow); }
+
+    .admin-product-thumb {
+      position: relative;
+      height: 160px;
+      overflow: hidden;
+      background: #120a18;
+    }
+
+    .admin-product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .admin-badge-pill {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      background: var(--adm-accent);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .admin-product-info {
+      padding: 0.9rem 1rem;
+    }
+
+    .admin-product-info h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--adm-text);
+      margin-bottom: 0.25rem;
+    }
+
+    .admin-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      color: var(--adm-accent);
+      background: rgba(143,23,60,0.15);
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    .admin-price-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 0.75rem;
+      color: var(--adm-accent2);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .admin-desc-preview {
+      font-size: 0.75rem;
+      color: var(--adm-muted);
+      line-height: 1.5;
+    }
+
+    .admin-product-actions {
+      display: flex;
+      border-top: 1px solid var(--adm-border);
+    }
+
+    .admin-btn-edit, .admin-btn-delete {
+      flex: 1;
+      padding: 0.6rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: background 0.15s;
+    }
+
+    .admin-btn-edit { color: #74b9ff; border-right: 1px solid var(--adm-border); }
+    .admin-btn-edit:hover { background: rgba(116,185,255,0.08); }
+    .admin-btn-delete { color: #ff8080; }
+    .admin-btn-delete:hover { background: rgba(231,76,60,0.1); }
+
+    .admin-empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--adm-muted);
+      font-size: 0.9rem;
+      grid-column: 1 / -1;
+    }
+
+    /* ---- MODALS ---- */
+    .admin-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem;
+      overflow-y: auto;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+
+    .admin-modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .admin-modal-card {
+      background: var(--adm-card);
+      border: 1px solid var(--adm-border);
+      border-radius: 18px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 660px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+      transform: translateY(-12px);
+      transition: transform 0.25s;
+      margin: auto;
+      position: relative;
+    }
+
+    .admin-modal-overlay.open .admin-modal-card { transform: translateY(0); }
+
+    .admin-modal-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--adm-text);
+      margin-bottom: 1.5rem;
+      padding-right: 2rem;
+    }
+
+    .admin-modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--adm-border);
+      color: var(--adm-muted);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .admin-modal-close:hover { background: rgba(231,76,60,0.15); color: #ff8080; }
+
+    /* ---- FORM STYLES ---- */
+    .admin-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .admin-form-group {
+      margin-bottom: 1rem;
+    }
+
+    .admin-form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .admin-form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--adm-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 0.4rem;
+    }
+
+    .admin-form-label .req { color: var(--adm-accent); }
+
+    .admin-form-input, .admin-form-select, .admin-form-textarea {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      background: rgba(255,255,255,0.05);
+      border: 1.5px solid var(--adm-border);
+      border-radius: 8px;
+      color: var(--adm-text);
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    .admin-form-input:focus,
+    .admin-form-select:focus,
+    .admin-form-textarea:focus {
+      outline: none;
+      border-color: var(--adm-accent);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .admin-form-select option { background: #1c1426; }
+    .admin-form-textarea { resize: vertical; min-height: 80px; }
+
+    .admin-price-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .admin-section-divider {
+      border: none;
+      border-top: 1px solid var(--adm-border);
+      margin: 1.25rem 0;
+    }
+
+    .admin-section-subtitle {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--adm-accent2);
+      margin-bottom: 0.75rem;
+    }
+
+    .admin-media-preview {
+      width: 100%;
+      max-height: 160px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-top: 0.5rem;
+      display: none;
+      border: 1px solid var(--adm-border);
+    }
+
+    .admin-media-hint {
+      font-size: 0.72rem;
+      color: var(--adm-muted);
+      margin-top: 0.3rem;
+    }
+
+    .admin-current-media {
+      font-size: 0.72rem;
+      color: var(--adm-accent2);
+      margin-top: 0.3rem;
+    }
+
+    .admin-form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    /* ---- SECTIONS LIST ---- */
+    #admin-sections-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .admin-section-card {
+      background: var(--adm-card);
+      border: 1px solid var(--adm-border);
+      border-radius: var(--adm-radius);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .admin-section-info h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .admin-section-info p { font-size: 0.78rem; color: var(--adm-muted); margin-top: 0.4rem; }
+
+    /* ---- CATEGORIES LIST ---- */
+    .admin-cats-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .admin-cats-layout { grid-template-columns: 1fr; }
+    }
+    .admin-cat-card {
+      background: var(--adm-card);
+      border: 1px solid var(--adm-border);
+      border-radius: var(--adm-radius);
+      padding: 0.9rem 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      transition: border-color 0.2s;
+    }
+    .admin-cat-card:hover {
+      border-color: rgba(143,23,60,0.5);
+    }
+    .admin-cat-main {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .admin-cat-icon {
+      font-size: 1.4rem;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      border: 1px solid var(--adm-border);
+      flex-shrink: 0;
+    }
+    .admin-cat-details h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--adm-text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.15rem;
+    }
+    .admin-cat-slug {
+      font-size: 0.75rem;
+      color: var(--adm-muted);
+      font-family: monospace;
+    }
+    .admin-cat-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .admin-cat-count {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(212,175,55,0.12);
+      color: var(--adm-accent2);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .admin-badge-default {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.07);
+      color: var(--adm-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    /* ---- HERO / ANNOUNCEMENT EDITOR ---- */
+    .admin-edit-card {
+      background: var(--adm-card);
+      border: 1px solid var(--adm-border);
+      border-radius: var(--adm-radius);
+      padding: 1.5rem;
+      max-width: 700px;
+    }
+
+    /* ---- TOAST ---- */
+    .admin-toast-wrap {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .admin-toast {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateX(30px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 340px;
+    }
+
+    .admin-toast.show { opacity: 1; transform: translateX(0); }
+    .admin-toast-success { background: #1a3a28; border: 1px solid #27ae60; }
+    .admin-toast-error { background: #3a1a1a; border: 1px solid #e74c3c; }
+    .admin-toast-warning { background: #3a2a10; border: 1px solid #f39c12; }
+
+    /* ---- COLOR INPUTS ---- */
+    .admin-color-row { display: flex; align-items: center; gap: 0.75rem; }
+    .admin-color-input { width: 44px; height: 34px; border-radius: 6px; border: 1px solid var(--adm-border); padding: 2px; background: none; cursor: pointer; }
+
+    /* ---- STATS DASHBOARD ---- */
+    .admin-stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .admin-stat-card {
+      background: var(--adm-card);
+      border: 1px solid var(--adm-border);
+      border-radius: var(--adm-radius);
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .admin-stat-num {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--adm-accent2);
+    }
+
+    .admin-stat-label {
+      font-size: 0.78rem;
+      color: var(--adm-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 0.25rem;
+    }
+
+    .admin-info-banner {
+      background: rgba(212,175,55,0.08);
+      border: 1px solid rgba(212,175,55,0.25);
+      border-radius: 10px;
+      padding: 0.9rem 1.25rem;
+      font-size: 0.82rem;
+      color: #d4af37;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .admin-layout { grid-template-columns: 1fr; }
+      .admin-sidebar { flex-direction: row; overflow-x: auto; padding: 0.75rem; border-right: none; border-bottom: 1px solid var(--adm-border); gap: 0.25rem; }
+      .admin-sidebar-label { display: none; }
+      .admin-tab-btn { padding: 0.5rem 0.75rem; font-size: 0.78rem; white-space: nowrap; }
+      .admin-form-grid { grid-template-columns: 1fr; }
+      .admin-price-group { grid-template-columns: 1fr 1fr; }
+      .admin-form-group.full-width { grid-column: 1; }
+      .admin-topbar { padding: 0.75rem 1rem; }
+      .admin-main { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+<div id="admin-root">
+
+  <!-- ===================== LOGIN SCREEN ===================== -->
+  <div id="admin-login-screen">
+    <div class="admin-login-box">
+      <img src="assets/logo/logo.jpeg" alt="Fiona Florist" class="admin-login-logo">
+      <h1 class="admin-login-title">Fiona Florist Admin</h1>
+      <p class="admin-login-subtitle">🔐 Secure Admin Panel — Authorised Access Only</p>
+
+      <div id="admin-login-error" class="admin-login-error"></div>
+
+      <form id="admin-login-form" autocomplete="off" novalidate>
+        <div class="admin-field-group">
+          <label class="admin-field-label" for="admin-login-id">Admin ID</label>
+          <input
+            type="text"
+            id="admin-login-id"
+            class="admin-input"
+            placeholder="Enter Admin ID"
+            autocomplete="off"
+            spellcheck="false"
+            required
+          >
+        </div>
+
+        <div class="admin-field-group">
+          <label class="admin-field-label" for="admin-login-pwd">Password</label>
+          <div class="admin-input-wrap">
+            <input
+              type="password"
+              id="admin-login-pwd"
+              class="admin-input"
+              placeholder="Enter password"
+              autocomplete="off"
+              required
+            >
+            <button type="button" id="admin-pwd-toggle" aria-label="Show/hide password">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" id="admin-login-btn" class="admin-login-btn">🔐 Enter Admin Panel</button>
+      </form>
+
+      <a href="index.html" class="admin-back-link">← Back to Website</a>
+    </div>
+  </div>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <div id="admin-dashboard">
+
+    <!-- Top Bar -->
+    <div class="admin-topbar">
+      <div class="admin-topbar-brand">
+        <img src="assets/logo/logo.jpeg" alt="Fiona Florist" class="admin-topbar-logo">
+        <div>
+          <div class="admin-topbar-title">Fiona Florist Admin</div>
+          <div class="admin-topbar-subtitle">🌸 Control Panel</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <a href="index.html" target="_blank" style="font-size:0.8rem;color:var(--adm-muted);text-decoration:none;">🌐 View Website</a>
+        <button type="button" id="admin-logout-btn" class="admin-logout-btn">🚪 Logout</button>
+      </div>
+    </div>
+
+    <!-- Layout: Sidebar + Main -->
+    <div class="admin-layout">
+
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <span class="admin-sidebar-label">Manage</span>
+        <button class="admin-tab-btn active" data-admintab="products">
+          <span class="tab-icon">🌸</span> Products
+        </button>
+        <button class="admin-tab-btn" data-admintab="categories">
+          <span class="tab-icon">🏷️</span> Categories
+        </button>
+        <button class="admin-tab-btn" data-admintab="sections">
+          <span class="tab-icon">📋</span> Sections
+        </button>
+        <span class="admin-sidebar-label">Content</span>
+        <button class="admin-tab-btn" data-admintab="hero">
+          <span class="tab-icon">🎨</span> Hero Banner
+        </button>
+        <button class="admin-tab-btn" data-admintab="announcements">
+          <span class="tab-icon">📢</span> Announcements
+        </button>
+        <span class="admin-sidebar-label">System</span>
+        <button class="admin-tab-btn" data-admintab="settings">
+          <span class="tab-icon">⚙️</span> Settings
+        </button>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="admin-main">
+
+        <!-- ========== PRODUCTS TAB ========== -->
+        <div class="admin-tab-panel active" id="admin-panel-products">
+          <div class="admin-panel-header">
+            <div>
+              <h2 class="admin-panel-title">🌸 Product Catalog</h2>
+              <p class="admin-panel-desc">Add, edit or delete products. Changes apply to the shop immediately.</p>
+            </div>
+            <div class="admin-action-row">
+              <button type="button" class="btn-admin-primary" onclick="openAddProductModal()">➕ Add Product</button>
+              <button type="button" id="admin-reset-products-btn" class="btn-admin-danger">↩️ Reset to Defaults</button>
+            </div>
+          </div>
+
+          <div class="admin-info-banner">
+            ℹ️ Products are stored in your browser's local storage and automatically appear on the shop & homepage. Images and videos you upload are encoded and stored locally.
+          </div>
+
+          <div id="admin-products-grid">
+            <div class="admin-empty-state">Loading products…</div>
+          </div>
+        </div>
+
+        <!-- ========== CATEGORIES TAB ========== -->
+        <div class="admin-tab-panel" id="admin-panel-categories">
+          <div class="admin-panel-header">
+            <div>
+              <h2 class="admin-panel-title">🏷️ Product Categories</h2>
+              <p class="admin-panel-desc">Add new categories or manage existing ones. New categories appear in product forms and on website shop filter tabs.</p>
+            </div>
+          </div>
+
+          <div class="admin-info-banner">
+            ℹ️ When you add a new category here, it immediately becomes available in the Product form and gets added as a filter button on the Shop and Home pages.
+          </div>
+
+          <div class="admin-cats-layout">
+            <!-- Add Category Card -->
+            <div class="admin-edit-card" style="width:100%; max-width:none;">
+              <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:1rem; color:var(--adm-text);">➕ Add New Category</h3>
+              <form id="category-form">
+                <div class="admin-form-group">
+                  <label class="admin-form-label">Category Name <span class="req">*</span></label>
+                  <input type="text" id="cf-name" class="admin-form-input" placeholder="e.g. Tulips, Gift Hampers, Combos" required>
+                </div>
+                <div class="admin-form-group">
+                  <label class="admin-form-label">Icon / Emoji (optional)</label>
+                  <input type="text" id="cf-icon" class="admin-form-input" placeholder="e.g. 🌷, 🎁, 💐, 🎀" style="max-width:140px;">
+                </div>
+                <div class="admin-form-group">
+                  <label class="admin-form-label">Category Slug / ID <span class="req">*</span></label>
+                  <input type="text" id="cf-slug" class="admin-form-input" placeholder="e.g. tulips" required>
+                  <small style="color:var(--adm-muted); font-size:0.75rem; margin-top:0.35rem; display:block;">Used in filters & URLs (letters, numbers and hyphens only)</small>
+                </div>
+                <div class="admin-form-actions" style="margin-top:1.25rem;">
+                  <button type="submit" id="cf-submit-btn" class="btn-admin-primary">➕ Create Category</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Existing Categories List -->
+            <div>
+              <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:1rem; color:var(--adm-text);">
+                📋 Store Categories (<span id="cat-count">0</span>)
+              </h3>
+              <div id="admin-categories-list" style="display:flex; flex-direction:column; gap:0.75rem;">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== SECTIONS TAB ========== -->
+        <div class="admin-tab-panel" id="admin-panel-sections">
+          <div class="admin-panel-header">
+            <div>
+              <h2 class="admin-panel-title">📋 Custom Sections</h2>
+              <p class="admin-panel-desc">Add promotional banners, info blocks, or media showcases to the website.</p>
+            </div>
+            <button type="button" class="btn-admin-primary" onclick="openSectionModal()">➕ Add Section</button>
+          </div>
+
+          <div class="admin-info-banner">
+            ℹ️ Custom sections appear at the bottom of the homepage above the footer. Each section can have a title, content, background colour, and an optional button link.
+          </div>
+
+          <div id="admin-sections-list">
+            <div class="admin-empty-state">Loading…</div>
+          </div>
+        </div>
+
+        <!-- ========== HERO TAB ========== -->
+        <div class="admin-tab-panel" id="admin-panel-hero">
+          <div class="admin-panel-header">
+            <div>
+              <h2 class="admin-panel-title">🎨 Hero Banner</h2>
+              <p class="admin-panel-desc">Edit the main hero section headline, subheading and call-to-action buttons.</p>
+            </div>
+          </div>
+
+          <div class="admin-edit-card">
+            <form id="hero-form">
+              <div class="admin-form-group">
+                <label class="admin-form-label">Headline Text</label>
+                <input type="text" id="he-heading" class="admin-form-input" placeholder="e.g. Flowers That Never Fade">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Sub-Heading / Badge</label>
+                <input type="text" id="he-badge" class="admin-form-input" placeholder="e.g. 🌸 Handcrafted in Maharashtra">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Description Text</label>
+                <textarea id="he-subheading" class="admin-form-textarea" rows="3" placeholder="Hero description paragraph…"></textarea>
+              </div>
+              <hr class="admin-section-divider">
+              <p class="admin-section-subtitle">Primary Button</p>
+              <div class="admin-form-grid">
+                <div class="admin-form-group">
+                  <label class="admin-form-label">Button Label</label>
+                  <input type="text" id="he-btn1-text" class="admin-form-input" placeholder="e.g. Shop Now">
+                </div>
+                <div class="admin-form-group">
+                  <label class="admin-form-label">Button Link</label>
+                  <input type="text" id="he-btn1-link" class="admin-form-input" placeholder="e.g. shop.html">
+                </div>
+              </div>
+              <p class="admin-section-subtitle">Secondary Button</p>
+              <div class="admin-form-grid">
+                <div class="admin-form-group">
+                  <label class="admin-form-label">Button Label</label>
+                  <input type="text" id="he-btn2-text" class="admin-form-input" placeholder="e.g. Custom Orders">
+                </div>
+                <div class="admin-form-group">
+                  <label class="admin-form-label">Button Link</label>
+                  <input type="text" id="he-btn2-link" class="admin-form-input" placeholder="e.g. custom-order.html">
+                </div>
+              </div>
+              <div class="admin-form-actions">
+                <button type="submit" class="btn-admin-primary">💾 Save Hero Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ========== ANNOUNCEMENTS TAB ========== -->
+        <div class="admin-tab-panel" id="admin-panel-announcements">
+          <div class="admin-panel-header">
+            <div>
+              <h2 class="admin-panel-title">📢 Announcement Bar</h2>
+              <p class="admin-panel-desc">Edit the top scrolling announcement bar across all pages.</p>
+            </div>
+          </div>
+
+          <div class="admin-edit-card">
+            <form id="announcement-form">
+              <div class="admin-form-group">
+                <label class="admin-form-label">Announcement 1</label>
+                <input type="text" id="ann-text1" class="admin-form-input" placeholder="e.g. 🌸 Handmade with love in Maharashtra">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Announcement 2</label>
+                <input type="text" id="ann-text2" class="admin-form-input" placeholder="e.g. Flowers That Never Fade">
+              </div>
+              <div class="admin-form-group">
+                <label class="admin-form-label">Announcement 3</label>
+                <input type="text" id="ann-text3" class="admin-form-input" placeholder="e.g. Ships across all Maharashtra PIN codes">
+              </div>
+              <div class="admin-form-actions">
+                <button type="submit" class="btn-admin-primary">💾 Save Announcements</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ========== SETTINGS TAB ========== -->
+        <div class="admin-tab-panel" id="admin-panel-settings">
+          <div class="admin-panel-header">
+            <div>
+              <h2 class="admin-panel-title">⚙️ Admin Settings</h2>
+              <p class="admin-panel-desc">Overview and system management.</p>
+            </div>
+          </div>
+
+          <div class="admin-stats-row" id="admin-stats-row">
+            <!-- Filled by JS -->
+          </div>
+
+          <div class="admin-edit-card" style="max-width:500px;">
+            <p class="admin-section-subtitle">⚠️ Danger Zone</p>
+            <p style="font-size:0.82rem;color:var(--adm-muted);margin-bottom:1.25rem;">These actions permanently clear stored data. Use with caution.</p>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              <button type="button" class="btn-admin-danger" onclick="if(confirm('Clear all custom sections?')){saveCustomSections([]);renderCustomSections();adminToast('Sections cleared.','error');}">🗑️ Clear All Custom Sections</button>
+              <button type="button" class="btn-admin-danger" onclick="if(confirm('Reset categories to default?')){localStorage.removeItem('fiona_admin_categories_v1');renderAdminCategories();populateCategorySelect();adminToast('Categories reset to defaults.','error');}">🗑️ Reset Categories to Default</button>
+              <button type="button" class="btn-admin-danger" onclick="if(confirm('Reset hero to defaults?')){localStorage.removeItem('fiona_admin_hero_v1');adminToast('Hero reset.','error');}">🗑️ Reset Hero to Default</button>
+              <button type="button" class="btn-admin-danger" onclick="if(confirm('Clear announcements?')){localStorage.removeItem('fiona_admin_announcements_v1');adminToast('Announcements cleared.','error');}">🗑️ Clear Announcements</button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div><!-- .admin-layout -->
+
+  </div><!-- #admin-dashboard -->
+
+  <!-- ========== PRODUCT MODAL ========== -->
+  <div id="admin-product-modal" class="admin-modal-overlay" role="dialog" aria-modal="true">
+    <div class="admin-modal-card">
+      <button type="button" class="admin-modal-close" onclick="closeProductModal()">&times;</button>
+      <h3 class="admin-modal-title" id="product-modal-title">➕ Add New Product</h3>
+
+      <form id="product-form" novalidate>
+        <input type="hidden" id="pf-product-id">
+
+        <div class="admin-form-grid">
+          <div class="admin-form-group full-width">
+            <label class="admin-form-label">Product Name <span class="req">*</span></label>
+            <input type="text" id="pf-name" class="admin-form-input" placeholder="e.g. Velvet Rose Bouquet" required>
+          </div>
+
+          <div class="admin-form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+              <label class="admin-form-label" style="margin-bottom:0;">Category <span class="req">*</span></label>
+              <button type="button" onclick="quickAddCategoryPrompt()" style="background:none; border:none; color:var(--adm-accent2); font-size:0.75rem; cursor:pointer; font-weight:600; text-decoration:underline; padding:0;">+ New Category</button>
+            </div>
+            <select id="pf-category" class="admin-form-select">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="admin-form-label">Product Type <span class="req">*</span></label>
+            <select id="pf-type" class="admin-form-select">
+              <option value="bouquet">Bouquet</option>
+              <option value="single">Single Stem</option>
+              <option value="keychain">Keychain</option>
+              <option value="accessory">Accessory</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group full-width">
+            <label class="admin-form-label">Badge Label (optional)</label>
+            <input type="text" id="pf-badge" class="admin-form-input" placeholder="e.g. Bestseller, New, Limited">
+          </div>
+
+          <div class="admin-form-group full-width">
+            <label class="admin-form-label">Product Description <span class="req">*</span></label>
+            <textarea id="pf-description" class="admin-form-textarea" rows="3" placeholder="Describe the product..."></textarea>
+          </div>
+        </div>
+
+        <hr class="admin-section-divider">
+        <p class="admin-section-subtitle">💰 Selling Prices (₹)</p>
+        <div class="admin-price-group">
+          <div class="admin-form-group">
+            <label class="admin-form-label">Single <span class="req">*</span></label>
+            <input type="number" id="pf-price-single" class="admin-form-input" min="1" placeholder="120">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Double</label>
+            <input type="number" id="pf-price-double" class="admin-form-input" min="1" placeholder="230">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Triple</label>
+            <input type="number" id="pf-price-triple" class="admin-form-input" min="1" placeholder="330">
+          </div>
+        </div>
+
+        <p class="admin-section-subtitle" style="margin-top:0.5rem;">🏷️ Original / Crossed-Out Prices (₹)</p>
+        <div class="admin-price-group">
+          <div class="admin-form-group">
+            <label class="admin-form-label">Single Original</label>
+            <input type="number" id="pf-orig-single" class="admin-form-input" min="1" placeholder="150">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Double Original</label>
+            <input type="number" id="pf-orig-double" class="admin-form-input" min="1" placeholder="280">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Triple Original</label>
+            <input type="number" id="pf-orig-triple" class="admin-form-input" min="1" placeholder="400">
+          </div>
+        </div>
+
+        <hr class="admin-section-divider">
+        <p class="admin-section-subtitle">🖼️ Product Image</p>
+        <div class="admin-form-group">
+          <label class="admin-form-label">Upload Image (JPG, PNG, WebP)</label>
+          <input type="file" id="pf-image" class="admin-form-input" accept="image/*">
+          <p class="admin-media-hint">Recommended: square images, max 2MB.</p>
+          <p class="admin-current-media" id="pf-current-media"></p>
+          <img id="pf-img-preview" class="admin-media-preview" alt="Image preview">
+        </div>
+
+        <p class="admin-section-subtitle">🎬 Product Video (optional)</p>
+        <div class="admin-form-group">
+          <label class="admin-form-label">Upload Video (MP4, max ~8MB recommended)</label>
+          <input type="file" id="pf-video" class="admin-form-input" accept="video/*">
+          <p class="admin-media-hint">Video will auto-play (muted loop) on the product card if added.</p>
+          <video id="pf-video-preview" class="admin-media-preview" muted loop playsinline></video>
+        </div>
+
+        <div class="admin-form-actions">
+          <button type="button" class="btn-admin-secondary" onclick="closeProductModal()">Cancel</button>
+          <button type="submit" id="pf-submit-btn" class="btn-admin-primary">💾 Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div><!-- #admin-product-modal -->
+
+  <!-- ========== SECTION MODAL ========== -->
+  <div id="admin-section-modal" class="admin-modal-overlay" role="dialog" aria-modal="true">
+    <div class="admin-modal-card">
+      <button type="button" class="admin-modal-close" onclick="closeSectionModal()">&times;</button>
+      <h3 class="admin-modal-title" id="section-modal-title">➕ Add New Section</h3>
+
+      <form id="section-form" novalidate>
+        <input type="hidden" id="section-edit-idx">
+
+        <div class="admin-form-group">
+          <label class="admin-form-label">Section Title <span class="req">*</span></label>
+          <input type="text" id="sf-title" class="admin-form-input" placeholder="e.g. Summer Sale!">
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-form-label">Section Type</label>
+          <select id="sf-type" class="admin-form-select">
+            <option value="banner">🖼️ Banner / Promo</option>
+            <option value="text">📝 Info / Text Block</option>
+            <option value="media">🎬 Media Showcase</option>
+          </select>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-form-label">Content / Message</label>
+          <textarea id="sf-content" class="admin-form-textarea" rows="3" placeholder="Enter the content text for this section…"></textarea>
+        </div>
+
+        <div class="admin-form-grid">
+          <div class="admin-form-group">
+            <label class="admin-form-label">Button Text (optional)</label>
+            <input type="text" id="sf-btn-text" class="admin-form-input" placeholder="e.g. Shop Now">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Button Link</label>
+            <input type="text" id="sf-btn-link" class="admin-form-input" placeholder="e.g. shop.html">
+          </div>
+        </div>
+
+        <div class="admin-form-grid">
+          <div class="admin-form-group">
+            <label class="admin-form-label">Background Colour</label>
+            <div class="admin-color-row">
+              <input type="color" id="sf-bg-color" class="admin-color-input" value="#F9E5E8">
+              <input type="text" class="admin-form-input" value="#F9E5E8" onchange="document.getElementById('sf-bg-color').value=this.value" style="flex:1;">
+            </div>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Text Colour</label>
+            <div class="admin-color-row">
+              <input type="color" id="sf-text-color" class="admin-color-input" value="#4B1026">
+              <input type="text" class="admin-form-input" value="#4B1026" onchange="document.getElementById('sf-text-color').value=this.value" style="flex:1;">
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-form-group">
+          <label class="admin-form-label">Section Image (optional)</label>
+          <input type="file" id="sf-image" class="admin-form-input" accept="image/*">
+          <img id="sf-img-preview" class="admin-media-preview" alt="Section image preview">
+        </div>
+
+        <div class="admin-form-actions">
+          <button type="button" class="btn-admin-secondary" onclick="closeSectionModal()">Cancel</button>
+          <button type="submit" class="btn-admin-primary">💾 Save Section</button>
+        </div>
+      </form>
+    </div>
+  </div><!-- #admin-section-modal -->
+
+</div><!-- #admin-root -->
+
+<!-- Close modals on ESC -->
+<script>
+  window.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      closeProductModal && closeProductModal();
+      closeSectionModal && closeSectionModal();
+    }
+  });
+</script>
+
+<!-- Scripts (order matters) -->
+<script src="js/products.js"></script>
+<script src="js/admin.js"></script>
+
+<!-- Stats panel init -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Populate stats panel
+    const statsRow = document.getElementById("admin-stats-row");
+    if (statsRow) {
+      function refreshStats() {
+        const products = typeof syncProductsData === "function" ? syncProductsData() : [];
+        const sections = typeof getCustomSections === "function" ? getCustomSections() : [];
+        const users = (() => { try { return JSON.parse(localStorage.getItem("fiona_florist_users_v1") || "[]"); } catch(e){ return []; } })();
+        const cart = (() => { try { return JSON.parse(localStorage.getItem("fiona_florist_cart_v1") || "[]"); } catch(e){ return []; } })();
+        const categories = typeof getCategories === "function" ? getCategories() : [];
+        statsRow.innerHTML = [
+          { num: products.length, label: "Total Products" },
+          { num: categories.length, label: "Categories" },
+          { num: sections.length, label: "Custom Sections" },
+          { num: users.length, label: "Registered Users" },
+          { num: cart.reduce((s,i) => s + (i.quantity||1), 0), label: "Active Cart Items" },
+        ].map(s => `<div class="admin-stat-card"><div class="admin-stat-num">${s.num}</div><div class="admin-stat-label">${s.label}</div></div>`).join("");
+      }
+
+      // Trigger on settings tab
+      document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.getAttribute('data-admintab') === 'settings') refreshStats();
+        });
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
+

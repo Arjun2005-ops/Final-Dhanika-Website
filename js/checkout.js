@@ -61,6 +61,16 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      if (typeof isUserLoggedIn === "function" && !isUserLoggedIn()) {
+        showToast("Please login before confirming your order! 🌸", "error");
+        if (typeof openAuthModal === "function") {
+          openAuthModal("login", {
+            reason: "Please login to complete your order confirmation."
+          });
+        }
+        return;
+      }
+
       // Read form fields
       const fullName = document.getElementById("cust-name").value.trim();
       const phone = document.getElementById("cust-phone").value.trim();

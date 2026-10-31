@@ -23,21 +23,27 @@ document.addEventListener("DOMContentLoaded", () => {
     currentCategory = urlParams.get("category").toLowerCase();
   }
 
-  // Update active filter button state
+  // Category tabs click delegation (supports dynamically added categories from admin)
+  const categoryTabsContainer = document.querySelector(".category-tabs");
+  if (categoryTabsContainer) {
+    categoryTabsContainer.addEventListener("click", (e) => {
+      const btn = e.target.closest(".filter-btn");
+      if (!btn) return;
+      categoryTabsContainer.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentCategory = (btn.getAttribute("data-category") || "all").toLowerCase();
+      renderProducts();
+    });
+  }
+
+  // Update initial active filter button state
   if (filterButtons.length > 0) {
     filterButtons.forEach(btn => {
-      if (btn.getAttribute("data-category") === currentCategory) {
+      if ((btn.getAttribute("data-category") || "").toLowerCase() === currentCategory) {
         btn.classList.add("active");
       } else {
         btn.classList.remove("active");
       }
-
-      btn.addEventListener("click", () => {
-        filterButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentCategory = btn.getAttribute("data-category");
-        renderProducts();
-      });
     });
   }
 
@@ -79,7 +85,10 @@ document.addEventListener("DOMContentLoaded", () => {
       } else if (currentCategory === "singles") {
         matchCategory = product.type === "single";
       } else if (currentCategory !== "all") {
-        matchCategory = product.category === currentCategory || product.type === currentCategory;
+        const prodCat = (product.category || "").toLowerCase();
+        const prodType = (product.type || "").toLowerCase();
+        const targetCat = currentCategory.toLowerCase();
+        matchCategory = prodCat === targetCat || prodType === targetCat;
       }
 
       // Search query match
