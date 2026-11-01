@@ -779,6 +779,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // If on admin.html
   if (!document.getElementById("admin-root")) return;
 
+  // Check if ?logout=1 in URL
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("logout") === "1") {
+    clearAdminSession();
+  }
+
   // Guard: if not logged in, show login screen, hide dashboard
   const loginScreen = document.getElementById("admin-login-screen");
   const dashScreen = document.getElementById("admin-dashboard");
@@ -786,6 +792,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!isAdminLoggedIn()) {
     if (loginScreen) loginScreen.style.display = "flex";
     if (dashScreen) dashScreen.style.display = "none";
+    const idInput = document.getElementById("admin-login-id");
+    if (idInput) setTimeout(() => idInput.focus(), 150);
   } else {
     if (loginScreen) loginScreen.style.display = "none";
     if (dashScreen) dashScreen.style.display = "block";

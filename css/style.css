@@ -1874,6 +1874,36 @@ textarea.form-control {
   gap: 1rem;
 }
 
+/* Footer Admin Button */
+.footer-admin-wrap {
+  display: inline-flex;
+  align-items: center;
+}
+
+.footer-admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(249, 229, 232, 0.85);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(249, 229, 232, 0.25);
+  border-radius: 999px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.footer-admin-btn:hover {
+  color: #ffffff;
+  background: var(--color-burgundy);
+  border-color: rgba(249, 229, 232, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
 /* Toast Notifications */
 .toast-container {
   position: fixed;
